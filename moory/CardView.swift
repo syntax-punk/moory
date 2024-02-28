@@ -13,61 +13,49 @@ struct CardView: View {
     
     let width: Int
     
-    @Binding var matchedCards: [Card]
+    @Binding var totalTries: Int
     @Binding var userChoices: [Card]
     
     var body: some View {
-        if card.isFaceUp || matchedCards.contains(where: { $0.id == card.id })
+        if card.isFaceUp
         {
             Text(card.text)
-                .font(.system(size: 50))
+                .font(.system(size: 42))
                 .foregroundColor(.white)
                 .padding()
                 .frame(width: CGFloat(width), height: CGFloat(width))
                 .background(Color.black)
-                .cornerRadius(6)
+                .cornerRadius(4)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(.white, lineWidth: 2)
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(.gray, lineWidth: 0.5)
                 )
         } else {
-            Text("-")
-                .font(.system(size: 50))
+            Text("")
+                .font(.system(size: 42))
                 .foregroundColor(.white)
                 .padding()
                 .frame(width: CGFloat(width), height: CGFloat(width))
                 .background(Color.black)
-                .cornerRadius(6)
+                .cornerRadius(4)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(.white, lineWidth: 2)
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(.gray, lineWidth: 0.5)
                 )
                 .onTapGesture {
-                    if userChoices.count == 0 {
+                    var tempChoices = userChoices
+                    tempChoices.append(card)
+                    
+                    let tempIndex = tempChoices.firstIndex(where: { $0.text == card.text })
+                    let orderIndex = cardsOrder.firstIndex(where: { $0.text == card.text })
+                    
+                    if (tempIndex == orderIndex) {
                         card.turnOver()
                         userChoices.append(card)
-                    } else if userChoices.count == 1 {
-                        card.turnOver()
-                        userChoices.append(card)
-                        
-                        withAnimation(Animation.linear.delay(1)){
-                            for thisCard in userChoices {
-                                thisCard.turnOver()
-                            }
-                        }
-                        
-                        checkForMatch()
                     }
+                    
+                    totalTries += 1
                 }
         }
-    }
-    
-    func checkForMatch() {
-        if userChoices[0].text == userChoices[1].text {
-            matchedCards.append(userChoices[0])
-            matchedCards.append(userChoices[1])
-        }
-        
-        userChoices.removeAll()
     }
 }

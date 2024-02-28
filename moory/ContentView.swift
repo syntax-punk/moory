@@ -13,9 +13,17 @@ struct ContentView: View {
 
     private var sixColGrid = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
-    @State var cards = createCardList().shuffled()
-    @State var matchedCards = [Card]()
+    
+    let displaySeconds = 2
+    let cardsCount = 4
+    
+    @State var totalTries = 0
+    @State var cards: [Card]
     @State var userChoices = [Card]()
+    
+    init() {
+        _cards = State(initialValue: createCardsList(count: cardsCount).shuffled())
+    }
     
     var body: some View {
         GeometryReader{geo in
@@ -28,29 +36,26 @@ struct ContentView: View {
                 LazyVGrid(columns: fourColGrid, spacing: 10) {
                     ForEach(cards){ card in
                         CardView(card: card,
-                                 width: Int(geo.size.width / 4 - 10), matchedCards: $matchedCards, userChoices: $userChoices)
+                                 width: Int(geo.size.width / 4 - 10), totalTries: $totalTries, userChoices: $userChoices)
                     }
                 }
                 
                 VStack{
-                    Text("Find these cards:")
+                    Text("Total tries: " + String(totalTries))
                         .foregroundColor(.white)
-                    LazyVGrid(columns: sixColGrid, spacing: 4){
-                        ForEach(cardValues, id:\.self) { cardValue in
-                            if !matchedCards.contains(where: {
-                                $0.text == cardValue
-                            }) {
-                                Text(cardValue)
-                                    .font(.system(size: 20))
-                                    .foregroundColor(.white)
-                            }
-                        }
-                    }
+                        .padding()
                     
                 }
             }
         }
         .background(.black)
+        .onAppear(){
+            DispatchQueue.main.asyncAfter(deadline: .now() + CGFloat(displaySeconds)) {
+                for card in self.cards {
+                    card.turnOver()
+                }
+            }
+        }
     }
 }
 
