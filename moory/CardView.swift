@@ -43,6 +43,11 @@ struct CardView: View {
                         .stroke(.gray, lineWidth: 0.5)
                 )
                 .onTapGesture {
+                    
+                    if userChoices.count == cardsOrder.count {
+                        return
+                    }
+                    
                     var tempChoices = userChoices
                     tempChoices.append(card)
                     

@@ -27,6 +27,7 @@ class Card: Identifiable, ObservableObject {
 var cardsOrder:[Card] = []
 
 func createCardsList(count: Int) -> [Card] {
+    cardsOrder = []
     var tempOrder = [Int]()
     
     var cardList = [Card]()

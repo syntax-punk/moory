@@ -20,16 +20,34 @@ struct ContentView: View {
     @State var totalTries = 0
     @State var cards: [Card]
     @State var userChoices = [Card]()
+    @State var showResults = false
+    
+    @State private var secondsElapsed = 0
+    @State private var timer: Timer?
     
     init() {
         _cards = State(initialValue: createCardsList(count: cardsCount).shuffled())
+    }
+    
+    func startApp() {
+        cards = createCardsList(count: cardsCount).shuffled()
+        totalTries = 0
+        userChoices = [Card]()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + CGFloat(displaySeconds)) {
+            for card in self.cards {
+                card.turnOver()
+            }
+        }
+        
+        startTimer()
     }
     
     var body: some View {
         GeometryReader{geo in
             VStack{
                 Text("moory")
-                    .font(.largeTitle)
+                    .font(.title)
                     .padding()
                     .foregroundColor(.white)
                 
@@ -40,22 +58,50 @@ struct ContentView: View {
                     }
                 }
                 
-                VStack{
+                HStack{
                     Text("Total tries: " + String(totalTries))
                         .foregroundColor(.white)
                         .padding()
-                    
+                    Spacer()
+                    Button{
+                        startApp()
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: 32))
+                            .foregroundColor(.white)
+                    }
                 }
+                .padding()
             }
         }
         .background(.black)
         .onAppear(){
-            DispatchQueue.main.asyncAfter(deadline: .now() + CGFloat(displaySeconds)) {
-                for card in self.cards {
-                    card.turnOver()
-                }
+            self.startApp()
+        }
+        .onChange(of: totalTries){
+            let result = self.userChoices.count == self.cardsCount
+            if result {
+                stopTimer()
+            }
+            self.showResults = result
+        }
+        .fullScreenCover(isPresented: $showResults) {
+            ResultsView(totalTries: $totalTries, timeSpent: $secondsElapsed)
+        }
+    }
+    
+    func startTimer() {
+        if timer == nil {
+            self.secondsElapsed = 0
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                self.secondsElapsed += 1
             }
         }
+    }
+
+    func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
 }
 

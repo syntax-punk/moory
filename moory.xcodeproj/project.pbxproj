@@ -14,6 +14,7 @@
 		6334BA3E2B8F2F0B00DD4F7D /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6334BA3D2B8F2F0B00DD4F7D /* Board.swift */; };
 		6334BA402B8F2F4000DD4F7D /* CardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6334BA3F2B8F2F4000DD4F7D /* CardModel.swift */; };
 		6334BA422B8F35F500DD4F7D /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6334BA412B8F35F500DD4F7D /* CardView.swift */; };
+		63C5D42D2B9081A4002E1899 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C5D42C2B9081A4002E1899 /* ResultsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		6334BA3D2B8F2F0B00DD4F7D /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		6334BA3F2B8F2F4000DD4F7D /* CardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardModel.swift; sourceTree = "<group>"; };
 		6334BA412B8F35F500DD4F7D /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		63C5D42C2B9081A4002E1899 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 			children = (
 				6334BA2F2B8F2E7D00DD4F7D /* mooryApp.swift */,
 				6334BA312B8F2E7D00DD4F7D /* ContentView.swift */,
+				63C5D42C2B9081A4002E1899 /* ResultsView.swift */,
 				6334BA3D2B8F2F0B00DD4F7D /* Board.swift */,
 				6334BA3F2B8F2F4000DD4F7D /* CardModel.swift */,
 				6334BA412B8F35F500DD4F7D /* CardView.swift */,
@@ -147,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6334BA322B8F2E7D00DD4F7D /* ContentView.swift in Sources */,
+				63C5D42D2B9081A4002E1899 /* ResultsView.swift in Sources */,
 				6334BA302B8F2E7D00DD4F7D /* mooryApp.swift in Sources */,
 				6334BA402B8F2F4000DD4F7D /* CardModel.swift in Sources */,
 				6334BA3E2B8F2F0B00DD4F7D /* Board.swift in Sources */,
