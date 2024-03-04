@@ -23,10 +23,10 @@ struct ResultsView: View {
                 Spacer()
                 VStack {
                     Text("Total Tries: \(totalTries)")
-                        .font(.title)
+                        .font(.title2)
                         .padding()
                     Text("Time Spent: \(timeSpent) sec")
-                        .font(.title)
+                        .font(.title2)
                         .padding()
                 }
                 

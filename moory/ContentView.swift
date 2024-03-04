@@ -17,6 +17,8 @@ struct ContentView: View {
     let displaySeconds = 2
     let cardsCount = 4
     
+    @Environment(\.scenePhase) private var scenePhase
+    
     @State var totalTries = 0
     @State var cards: [Card]
     @State var userChoices = [Card]()
@@ -84,6 +86,14 @@ struct ContentView: View {
                 stopTimer()
             }
             self.showResults = result
+        }
+        .onChange(of: scenePhase) {
+            switch scenePhase {
+            case .background:
+                stopTimer()
+            default:
+                break
+            }
         }
         .fullScreenCover(isPresented: $showResults) {
             ResultsView(totalTries: $totalTries, timeSpent: $secondsElapsed)
