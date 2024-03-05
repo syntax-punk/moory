@@ -10,19 +10,19 @@ import SwiftUI
 struct ContentView: View {
     
     private var fourColGrid = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-
     private var sixColGrid = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
     
-    let displaySeconds = 2
     let cardsCount = 4
     
     @Environment(\.scenePhase) private var scenePhase
+    @AppStorage("displayTime") private var displayTime = "1"
     
     @State var totalTries = 0
     @State var cards: [Card]
     @State var userChoices = [Card]()
     @State var showResults = false
+    @State var openSettings = false
     
     @State private var secondsElapsed = 0
     @State private var timer: Timer?
@@ -31,27 +31,10 @@ struct ContentView: View {
         _cards = State(initialValue: createCardsList(count: cardsCount).shuffled())
     }
     
-    func startApp() {
-        cards = createCardsList(count: cardsCount).shuffled()
-        totalTries = 0
-        userChoices = [Card]()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + CGFloat(displaySeconds)) {
-            for card in self.cards {
-                card.turnOver()
-            }
-        }
-        
-        startTimer()
-    }
-    
     var body: some View {
         GeometryReader{geo in
             VStack{
-                Text("moory")
-                    .font(.title)
-                    .padding()
-                    .foregroundColor(.white)
+                Header(openSettings: $openSettings)
                 
                 LazyVGrid(columns: fourColGrid, spacing: 10) {
                     ForEach(cards){ card in
@@ -98,6 +81,24 @@ struct ContentView: View {
         .fullScreenCover(isPresented: $showResults) {
             ResultsView(totalTries: $totalTries, timeSpent: $secondsElapsed)
         }
+        .fullScreenCover(isPresented: $openSettings) {
+            SettingsView(displayTime: $displayTime)
+        }
+    }
+    
+    func startApp() {
+        cards = createCardsList(count: cardsCount).shuffled()
+        totalTries = 0
+        userChoices = [Card]()
+        let timeInt = Int(displayTime) ?? 1
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + CGFloat(timeInt)) {
+            for card in self.cards {
+                card.turnOver()
+            }
+        }
+        
+        startTimer()
     }
     
     func startTimer() {

@@ -1,16 +1,17 @@
 //
-//  ResultsView.swift
+//  SettingsView.swift
 //  moory
 //
-//  Created by David on 29/02/2024.
+//  Created by David on 04/03/2024.
 //
 
 import SwiftUI
 
-struct ResultsView: View {
+struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var totalTries: Int
-    @Binding var timeSpent: Int
+    @Binding var displayTime: String
+
+    let timeList = ["0.25", "0.5", "1", "1.5", "2"]
     
     var body: some View {
         ZStack {
@@ -20,22 +21,22 @@ struct ResultsView: View {
                 .blur(radius: 10)
             
             VStack(spacing: 32) {
-                Spacer()
-                VStack {
-                    Text("Total Tries: \(totalTries)")
-                        .font(.title2)
-                        .padding()
-                    Text("Time Spent: \(timeSpent) sec")
-                        .font(.title2)
-                        .padding()
+                Form {
+                    Section(header: Text("Display time (seconds)")) {
+                        Picker("Seconds: ", selection: $displayTime) {
+                           ForEach(timeList, id: \.self) {
+                               Text($0)
+                           }
+                       }
+                    }
+                    .pickerStyle(.segmented)
                 }
-                
-                Spacer()
+                .background(.clear)
                 
                 Button() {
                     self.dismiss()
                 } label: {
-                    Text("Dismiss")
+                    Text("Back")
                         .font(.title2)
                         .foregroundColor(.white)
                         .padding()
@@ -47,6 +48,5 @@ struct ResultsView: View {
                 Spacer()
             }
         }
-
     }
 }
