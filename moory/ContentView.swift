@@ -11,25 +11,19 @@ struct ContentView: View {
     
     private var fourColGrid = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     private var sixColGrid = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-
-    
-    let cardsCount = 4
     
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("displayTime") private var displayTime = "1"
+    @AppStorage("cardsCount") private var cardsCount = "4"
     
     @State var totalTries = 0
-    @State var cards: [Card]
+    @State var cards: [Card] = []
     @State var userChoices = [Card]()
     @State var showResults = false
     @State var openSettings = false
     
     @State private var secondsElapsed = 0
     @State private var timer: Timer?
-    
-    init() {
-        _cards = State(initialValue: createCardsList(count: cardsCount).shuffled())
-    }
     
     var body: some View {
         GeometryReader{geo in
@@ -63,15 +57,15 @@ struct ContentView: View {
         .onAppear(){
             self.startApp()
         }
-        .onChange(of: totalTries){
-            let result = self.userChoices.count == self.cardsCount
+        .onChange(of: totalTries){ newValue in
+            let result = self.userChoices.count == Int(self.cardsCount)
             if result {
                 stopTimer()
             }
             self.showResults = result
         }
-        .onChange(of: scenePhase) {
-            switch scenePhase {
+        .onChange(of: scenePhase) { newValue in
+            switch newValue {
             case .background:
                 stopTimer()
             default:
@@ -82,17 +76,19 @@ struct ContentView: View {
             ResultsView(totalTries: $totalTries, timeSpent: $secondsElapsed)
         }
         .fullScreenCover(isPresented: $openSettings) {
-            SettingsView(displayTime: $displayTime)
+            SettingsView(displayTime: $displayTime, cardsCount: $cardsCount)
         }
     }
     
     func startApp() {
-        cards = createCardsList(count: cardsCount).shuffled()
+        let count = Int(cardsCount) ?? 4
+        let time = Float(displayTime) ?? 1
+        
+        cards = createCardsList(count: count).shuffled()
         totalTries = 0
         userChoices = [Card]()
-        let timeInt = Int(displayTime) ?? 1
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + CGFloat(timeInt)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + CGFloat(time)) {
             for card in self.cards {
                 card.turnOver()
             }
