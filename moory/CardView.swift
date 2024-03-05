@@ -20,7 +20,7 @@ struct CardView: View {
         if card.isFaceUp
         {
             Text(card.text)
-                .font(.system(size: 42))
+                .font(.system(.largeTitle))
                 .foregroundColor(.white)
                 .padding()
                 .frame(width: CGFloat(width), height: CGFloat(width))
@@ -32,7 +32,7 @@ struct CardView: View {
                 )
         } else {
             Text("")
-                .font(.system(size: 42))
+                .font(.system(.largeTitle))
                 .foregroundColor(.white)
                 .padding()
                 .frame(width: CGFloat(width), height: CGFloat(width))

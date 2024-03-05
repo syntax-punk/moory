@@ -10,7 +10,6 @@ import SwiftUI
 struct ContentView: View {
     
     private var fourColGrid = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-    private var sixColGrid = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("displayTime") private var displayTime = "1"
@@ -24,6 +23,7 @@ struct ContentView: View {
     
     @State private var secondsElapsed = 0
     @State private var timer: Timer?
+    @State private var isReadyToStart = true
     
     var body: some View {
         GeometryReader{geo in
@@ -32,24 +32,16 @@ struct ContentView: View {
                 
                 LazyVGrid(columns: fourColGrid, spacing: 10) {
                     ForEach(cards){ card in
-                        CardView(card: card,
-                                 width: Int(geo.size.width / 4 - 10), totalTries: $totalTries, userChoices: $userChoices)
+                        CardView(
+                            card: card,
+                            width: Int(geo.size.width / 4 - 10),
+                            totalTries: $totalTries,
+                            userChoices: $userChoices
+                        )
                     }
                 }
                 
-                HStack{
-                    Text("Total tries: " + String(totalTries))
-                        .foregroundColor(.white)
-                        .padding()
-                    Spacer()
-                    Button{
-                        startApp()
-                    } label: {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 32))
-                            .foregroundColor(.white)
-                    }
-                }
+                Footer(totalTries: $totalTries, startApp: startApp)
                 .padding()
             }
         }
@@ -81,6 +73,10 @@ struct ContentView: View {
     }
     
     func startApp() {
+        if !isReadyToStart {
+            return
+        }
+        
         let count = Int(cardsCount) ?? 4
         let time = Float(displayTime) ?? 1
         
@@ -92,8 +88,10 @@ struct ContentView: View {
             for card in self.cards {
                 card.turnOver()
             }
+            isReadyToStart = true
         }
         
+        isReadyToStart = false
         startTimer()
     }
     

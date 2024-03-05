@@ -13,7 +13,7 @@ struct Header: View {
     var body: some View {
         HStack{
             Text("moory")
-                .font(.title)
+                .font(.title2)
                 .padding()
                 .foregroundColor(.white)
             
@@ -23,7 +23,7 @@ struct Header: View {
                 openSettings.toggle()
             } label: {
                 Image(systemName: "gearshape.fill")
-                    .font(.system(size: 32))
+                    .font(.system(.title))
                     .foregroundColor(.white)
                     .padding()
             }

@@ -21,7 +21,7 @@ struct Footer: View {
                 startApp()
             } label: {
                 Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 32))
+                    .font(.system(.title))
                     .foregroundColor(.white)
             }
         }
