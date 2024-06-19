@@ -17,13 +17,11 @@ struct Footer: View {
                 .foregroundColor(.white)
                 .padding()
             Spacer()
-            Button{
+            Button("Play"){
                 startApp()
-            } label: {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(.title))
-                    .foregroundColor(.white)
             }
+            .font(.title2)
+            .foregroundColor(.white)
         }
     }
 }

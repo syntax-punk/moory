@@ -26,13 +26,13 @@ class Card: Identifiable, ObservableObject {
 
 var cardsOrder:[Card] = []
 
-func createCardsList(count: Int) -> [Card] {
+func createCardsList(count: Int, total: Int) -> [Card] {
     cardsOrder = []
     var tempOrder = [Int]()
     
     var cardList = [Card]()
     
-    for i in 0..<24 {
+    for i in 0..<total {
         if i < count {
             let num = Int.random(in: 10..<100)
             cardList.append(Card(text: String(num)))

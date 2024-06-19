@@ -25,30 +25,56 @@ struct ContentView: View {
     @State private var timer: Timer?
     @State private var isReadyToStart = true
     
+    private let boxWidth: CGFloat = 80
+    private let spacing: CGFloat = 10
+    private let footerHeight: CGFloat = 180
+
+    private var columnsCount: Int = 0
+    private var rowsCount: Int = 0
+    
+    init() {
+        let safeAreaInsets = UIApplication.shared.windows.first?.safeAreaInsets ?? UIEdgeInsets.zero
+        let usableWidth = UIScreen.main.bounds.width - safeAreaInsets.left - safeAreaInsets.right
+        let usableHeight = UIScreen.main.bounds.height - safeAreaInsets.top - safeAreaInsets.bottom
+                        
+        let totalHorizontalSpacing = spacing * 3
+        let availableWidth = usableWidth - totalHorizontalSpacing
+        self.columnsCount = Int(availableWidth / (self.boxWidth + self.spacing))
+        
+        let totalVerticalSpacing = self.spacing * 3
+        let availableHeight = usableHeight - totalVerticalSpacing - self.footerHeight
+        self.rowsCount = Int(availableHeight / (self.boxWidth + self.spacing))
+    }
+    
     var body: some View {
-        GeometryReader{geo in
+        GeometryReader { geo in
             VStack{
                 Header(openSettings: $openSettings)
                 
-                LazyVGrid(columns: fourColGrid, spacing: 10) {
+                let gridItems = Array(repeating: GridItem(.flexible(), spacing: self.spacing), count: self.columnsCount)
+                
+                LazyVGrid(columns: gridItems, spacing: spacing) {
                     ForEach(cards){ card in
                         CardView(
                             card: card,
-                            width: Int(geo.size.width / 4 - 10),
+                            width: Int(self.boxWidth),
                             totalTries: $totalTries,
                             userChoices: $userChoices
                         )
+                        .frame(width: self.boxWidth)
                     }
                 }
                 
-                Footer(totalTries: $totalTries, startApp: startApp)
+                Footer(totalTries: $totalTries, startApp: {
+                    self.startApp()
+                })
                 .padding()
+            }
+            .onAppear {
+                self.startApp()
             }
         }
         .background(.black)
-        .onAppear(){
-            self.startApp()
-        }
         .onChange(of: totalTries){ newValue in
             let result = self.userChoices.count == Int(self.cardsCount)
             if result {
@@ -76,11 +102,12 @@ struct ContentView: View {
         if !isReadyToStart {
             return
         }
+        let totalCards = self.columnsCount * self.rowsCount
         
         let count = Int(cardsCount) ?? 4
         let time = Float(displayTime) ?? 1
         
-        cards = createCardsList(count: count).shuffled()
+        cards = createCardsList(count: count, total: totalCards).shuffled()
         totalTries = 0
         userChoices = [Card]()
         
